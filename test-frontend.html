@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend API Tester</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 15px; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; font-size: 1.2rem; }
+        input, select, button { margin: 5px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #0056b3; }
+        pre { background: #333; color: #0f0; padding: 10px; overflow-x: auto; font-size: 0.9rem; }
+        .token-box { background: #e9ecef; padding: 10px; border-radius: 5px; margin-bottom: 20px; border: 2px solid #007bff; }
+    </style>
+</head>
+<body>
+
+    <h1>API Tester (No-Frills Frontend)</h1>
+    <p>Ensure your backend server is running on <b>http://localhost:5000</b>.</p>
+
+    <!-- Global Token State -->
+    <div class="token-box">
+        <label><b>Current JWT Token (Auto-fills on login):</b></label>
+        <input type="text" id="jwtToken" placeholder="Paste token here to test protected routes...">
+    </div>
+
+    <!-- Output Box -->
+    <div class="card">
+        <h2>Server Response</h2>
+        <pre id="output">Waiting for action...</pre>
+    </div>
+
+    <hr>
+
+    <!-- 1. AUTHENTICATION -->
+    <div class="card">
+        <h2>1. Signup (/api/auth/signup)</h2>
+        <input type="text" id="signupName" placeholder="Name (e.g. SolarCorp)">
+        <input type="email" id="signupEmail" placeholder="Email (e.g. test@org.com)">
+        <input type="password" id="signupPassword" placeholder="Password (e.g. 123456)">
+        <select id="signupRole">
+            <option value="org">Organization (org)</option>
+            <option value="consumer">Consumer (consumer)</option>
+            <option value="admin">Admin (admin)</option>
+        </select>
+        <input type="text" id="signupWallet" placeholder="Wallet Address (Optional)">
+        <button onclick="signup()">Signup</button>
+    </div>
+
+    <div class="card">
+        <h2>2. Login (/api/auth/login)</h2>
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- 2. CREDITS (ORG & ADMIN) -->
+    <div class="card">
+        <h2>3. Submit Credit Request (ORG ONLY) - /api/credits</h2>
+        <input type="number" id="creditAmount" placeholder="Amount (e.g. 100)">
+        <input type="text" id="creditDesc" placeholder="Description (e.g. Solar farm output)">
+        <button onclick="submitCredit()">Submit Request</button>
+    </div>
+
+    <div class="card">
+        <h2>4. Get My Credits (ORG ONLY) - /api/credits/mine</h2>
+        <button onclick="getMyCredits()">Fetch My Credits</button>
+    </div>
+
+    <div class="card">
+        <h2>5. Approve Credit (ADMIN ONLY) - /api/credits/:id/approve</h2>
+        <input type="number" id="approveCreditId" placeholder="Credit ID to approve (e.g. 1)">
+        <p><i>Note: This triggers the blockchain minting! Make sure your contract is deployed and .env is set up.</i></p>
+        <button onclick="approveCredit()">Approve & Mint</button>
+    </div>
+
+    <!-- 3. MARKETPLACE (ORG & CONSUMER) -->
+    <div class="card">
+        <h2>6. List Credit for Sale (ORG ONLY) - /api/marketplace/list</h2>
+        <input type="number" id="listCreditId" placeholder="Verified Credit ID (e.g. 1)">
+        <input type="number" id="listPrice" placeholder="Price (e.g. 50)">
+        <button onclick="listCredit()">List on Marketplace</button>
+    </div>
+
+    <div class="card">
+        <h2>7. View Marketplace - /api/marketplace</h2>
+        <button onclick="getMarketplace()">Fetch Listed Credits</button>
+    </div>
+
+    <div class="card">
+        <h2>8. Buy Credit (CONSUMER ONLY) - /api/marketplace/:listingId/buy</h2>
+        <input type="number" id="buyListingId" placeholder="Listing ID to buy (e.g. 1)">
+        <button onclick="buyCredit()">Buy Credit</button>
+    </div>
+
+    <div class="card">
+        <h2>9. Retire/Offset Credit (CONSUMER) - /api/marketplace/retire/:creditId</h2>
+        <input type="number" id="retireCreditId" placeholder="Credit ID to retire (e.g. 1)">
+        <p><i>Note: This triggers the blockchain burning!</i></p>
+        <button onclick="retireCredit()">Retire & Generate Certificate</button>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        function logOutput(data) {
+            document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function getHeaders() {
+            const token = document.getElementById('jwtToken').value;
+            return {
+                'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+            };
+        }
+
+        async function makeRequest(url, method, body = null) {
+            try {
+                document.getElementById('output').textContent = "Loading...";
+                const options = { method, headers: getHeaders() };
+                if (body) options.body = JSON.stringify(body);
+                const res = await fetch(API_BASE + url, options);
+                const data = await res.json();
+                logOutput(data);
+                return data;
+            } catch (err) {
+                logOutput({ error: err.message });
+            }
+        }
+
+        async function signup() {
+            const data = await makeRequest('/auth/signup', 'POST', {
+                name: document.getElementById('signupName').value,
+                email: document.getElementById('signupEmail').value,
+                password: document.getElementById('signupPassword').value,
+                role: document.getElementById('signupRole').value,
+                wallet_address: document.getElementById('signupWallet').value
+            });
+            if (data && data.token) document.getElementById('jwtToken').value = data.token;
+        }
+
+        async function login() {
+            const data = await makeRequest('/auth/login', 'POST', {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            });
+            if (data && data.token) document.getElementById('jwtToken').value = data.token;
+        }
+
+        async function submitCredit() {
+            await makeRequest('/credits', 'POST', {
+                amount: document.getElementById('creditAmount').value,
+                description: document.getElementById('creditDesc').value,
+                doc_url: "http://example.com/proof.pdf"
+            });
+        }
+
+        async function getMyCredits() {
+            await makeRequest('/credits/mine', 'GET');
+        }
+
+        async function approveCredit() {
+            const id = document.getElementById('approveCreditId').value;
+            await makeRequest(`/credits/${id}/approve`, 'PATCH');
+        }
+
+        async function listCredit() {
+            await makeRequest('/marketplace/list', 'POST', {
+                creditId: document.getElementById('listCreditId').value,
+                price: document.getElementById('listPrice').value
+            });
+        }
+
+        async function getMarketplace() {
+            await makeRequest('/marketplace', 'GET');
+        }
+
+        async function buyCredit() {
+            const listingId = document.getElementById('buyListingId').value;
+            await makeRequest(`/marketplace/${listingId}/buy`, 'POST');
+        }
+
+        async function retireCredit() {
+            const creditId = document.getElementById('retireCreditId').value;
+            await makeRequest(`/marketplace/retire/${creditId}`, 'POST');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+@keyframes orbitOne {
+  from {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(405deg);
+  }
+}
+
+@keyframes orbitTwo {
+  from {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(-405deg);
+  }
+}
+
+@keyframes orbitThree {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.animate-orbit-one {
+  animation: orbitOne 600s linear infinite;
+}
+
+.animate-orbit-two {
+  animation: orbitTwo 100s linear infinite;
+}
+
+.animate-orbit-three {
+  animation: orbitThree 100s linear infinite;
+}
+
+@keyframes carbonMove {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) translateY(-8px) rotate(2deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+}
+
+.animate-carbon-move {
+  animation: carbonMove 8s ease-in-out infinite;
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 5s ease-in-out infinite;
+}
+
+ 
+
+@keyframes ecosystemMove {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.animate-ecosystem-move {
+  animation: ecosystemMove 8s ease-in-out infinite;
+}
+@keyframes ecosystemFloat {
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(2deg);
+  }
+}
+
+.animate-ecosystem-float {
+  animation: ecosystemFloat 6s ease-in-out infinite;
+}
+
+@keyframes rotateOrbits {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-orbits {
+  animation: rotateOrbits 120s linear infinite;
+}
