@@ -21,6 +21,21 @@ const Credit = sequelize.define('Credit', {
   doc_url: {
     type: DataTypes.STRING
   },
+  org_name: {
+    type: DataTypes.STRING
+  },
+  country: {
+    type: DataTypes.STRING,
+    defaultValue: 'India'
+  },
+  category: {
+    type: DataTypes.STRING,
+    defaultValue: 'Waste Segregation & Sanitization'
+  },
+  vintage: {
+    type: DataTypes.STRING,
+    defaultValue: '2026'
+  },
   token_id: {
     type: DataTypes.INTEGER
   },

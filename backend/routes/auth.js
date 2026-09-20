@@ -23,12 +23,14 @@ router.post('/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const password_hash = await bcrypt.hash(password, salt);
 
+    const assignedWallet = wallet_address || ("0x" + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join(''));
+
     const user = await User.create({
       name,
       email,
       password_hash,
       role,
-      wallet_address
+      wallet_address: assignedWallet
     });
 
     res.status(201).json({
@@ -36,6 +38,7 @@ router.post('/signup', async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      wallet_address: user.wallet_address,
       token: generateToken(user.id),
     });
   } catch (error) {
@@ -50,11 +53,18 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ where: { email } });
 
     if (user && (await bcrypt.compare(password, user.password_hash))) {
+      // Ensure wallet address exists
+      if (!user.wallet_address) {
+        user.wallet_address = "0x" + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+        await user.save();
+      }
+
       res.json({
         id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+        wallet_address: user.wallet_address,
         token: generateToken(user.id),
       });
     } else {

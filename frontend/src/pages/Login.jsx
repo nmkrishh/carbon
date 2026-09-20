@@ -3,6 +3,7 @@ import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useToast } from "../context/ToastContext";
+import { API_URL } from "../config/api";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,38 +16,37 @@ export default function Login() {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
   
     if (!email || !password) {
       addToast("Please enter your email and password.", "error");
       return;
     }
-
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-        
-        if (data.role === "consumer") navigate("/marketplace");
-        else if (data.role === "org") navigate("/dashboard");
-        else if (data.role === "admin") navigate("/admin");
-        else navigate("/"); // fallback
-      }
-    } catch (error) {
-      addToast(error.message, "error");
+  
+    // Demo login — any email/password is accepted
+    localStorage.setItem("token", "demo-token");
+    localStorage.setItem("role", role);
+    localStorage.setItem("name", email.split("@")[0] || "Eco User");
+  
+    // Generate a demo wallet address
+    localStorage.setItem(
+      "wallet_address",
+      "0x" +
+        Array.from({ length: 40 }, () =>
+          Math.floor(Math.random() * 16).toString(16)
+        ).join("")
+    );
+  
+    // Redirect according to selected RBAC role
+    if (role === "consumer") {
+      navigate("/marketplace");
+    } else if (role === "organization") {
+      navigate("/dashboard");
+    } else if (role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/");
     }
   };
 
@@ -61,16 +61,15 @@ export default function Login() {
           {/* LOGO */}
           <Link
             to="/"
-            className="mb-28 flex w-fit items-center gap-2"
-            >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#1d2b1f]">
-                <div className="h-3 w-3 rounded-full bg-[#1d2b1f]" />
-            </div>
-
-            <span className="text-[34px] font-medium tracking-[-0.04em] text-[#202020]">
-                CarbonX
-            </span>
-            </Link>
+            className="mb-20 flex w-fit items-center"
+            title="EcoSankalp"
+          >
+            <img
+              src="/Eco.svg"
+              alt="EcoSankalp Logo"
+              className="h-16 w-16 sm:h-20 sm:w-20 object-contain hover:scale-105 transition-transform duration-200"
+            />
+          </Link>
 
 
           {/* LOGIN CONTENT */}
@@ -81,7 +80,7 @@ export default function Login() {
             </h1>
 
             <p className="mt-1 text-[16px] text-[#4f4f4f]">
-              Sign in to continue to CarbonX
+              Sign in to continue to EcoSankalp
             </p>
 
             {/* ROLE SELECTION */}

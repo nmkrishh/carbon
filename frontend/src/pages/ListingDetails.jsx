@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Navbar from "../components/Navbar";
+import { API_URL } from "../config/api";
 import {
   useNavigate,
   useParams,
@@ -106,7 +108,7 @@ export default function ListingDetails() {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/api/marketplace/${listing.id}/buy`, {
+      const response = await fetch(`${API_URL}/api/marketplace/${listing.id}/buy`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -122,7 +124,7 @@ export default function ListingDetails() {
       setTimeout(async () => {
          setMessage("Retiring credit and generating certificate...");
          try {
-           const retireRes = await fetch(`http://localhost:5000/api/marketplace/retire/${listing.creditId}`, {
+           const retireRes = await fetch(`${API_URL}/api/marketplace/retire/${listing.creditId}`, {
               method: "POST",
               headers: { "Authorization": `Bearer ${token}` }
            });
@@ -166,15 +168,14 @@ export default function ListingDetails() {
           {/* LOGO */}
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2"
+            className="flex items-center"
+            title="EcoSankalp"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-green-800">
-              <div className="h-3 w-3 rounded-full bg-green-800" />
-            </div>
-
-            <span className="text-xl font-bold tracking-tight text-slate-900">
-              CarbonX
-            </span>
+            <img
+              src="/Eco.svg"
+              alt="EcoSankalp Logo"
+              className="h-12 w-12 object-contain hover:scale-105 transition-transform duration-200"
+            />
           </button>
 
 
@@ -226,6 +227,12 @@ export default function ListingDetails() {
             <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">
               {listing.title}
             </h1>
+
+            {/* ORGANIZATION / SELLER BADGE */}
+            <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-emerald-800 bg-emerald-50 w-fit px-3.5 py-1 rounded-full border border-emerald-200 shadow-sm">
+              <span className="text-slate-500 font-normal">Verified Organization:</span>
+              <span>{listing.orgName || "GreenTech Renewables"}</span>
+            </div>
 
 
             <div className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-500">
@@ -390,6 +397,10 @@ export default function ListingDetails() {
                   <h2 className="mt-2 text-2xl font-bold text-slate-900">
                     Buy Carbon Credits
                   </h2>
+
+                  <p className="mt-1 text-xs font-medium text-slate-500">
+                    Seller: <span className="font-bold text-emerald-800">{listing.orgName || "GreenTech Renewables"}</span>
+                  </p>
 
                 </div>
 
@@ -599,7 +610,7 @@ export default function ListingDetails() {
 
                   <p className="mt-5 leading-7 text-slate-600">
                     {listing.title} is a verified carbon project offered
-                    through the CarbonX marketplace. The project contributes
+                    through the EcoSankalp marketplace. The project contributes
                     to measurable climate action and environmental impact.
                   </p>
 
@@ -660,6 +671,11 @@ export default function ListingDetails() {
                   <div className="mt-7 grid gap-4 sm:grid-cols-2">
 
                     <DetailItem
+                      label="Organization / Issuer"
+                      value={listing.orgName || "GreenTech Renewables"}
+                    />
+
+                    <DetailItem
                       label="Project Type"
                       value={listing.category || "Carbon Removal"}
                     />
@@ -676,7 +692,7 @@ export default function ListingDetails() {
 
                     <DetailItem
                       label="Registry"
-                      value="CarbonX Verified"
+                      value="EcoSankalp Verified"
                     />
 
                     <DetailItem
@@ -832,7 +848,7 @@ export default function ListingDetails() {
 
               <p className="mt-3 text-sm leading-6 text-white/65">
                 This carbon project has been reviewed and its credit
-                information is transparently displayed on the CarbonX
+                information is transparently displayed on the EcoSankalp
                 marketplace.
               </p>
 

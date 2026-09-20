@@ -9,14 +9,12 @@ export default function Footer() {
         <div className="flex flex-col justify-between gap-10 border-b border-[#dfe3e8] pb-10 md:flex-row md:items-center">
 
           {/* LOGO */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-[#244db5] text-xl font-bold text-[#244db5] font-bold text-green-900">
-              C
-            </div>
-
-            <span className="text-[15px] font-bold tracking-[0.42em] text-[#344054] font-bold text-green-900">
-              CARBONX
-            </span>
+          <Link to="/" className="flex items-center" title="EcoSankalp">
+            <img
+              src="/Eco.svg"
+              alt="EcoSankalp Logo"
+              className="h-16 w-16 sm:h-20 sm:w-20 object-contain hover:scale-105 transition-transform duration-200"
+            />
           </Link>
 
           {/* RIGHT TEXT */}
@@ -162,7 +160,7 @@ export default function Footer() {
         {/* BOTTOM ROW */}
         <div className="flex flex-col gap-3 py-7 text-[16px] tracking-wide md:flex-row md:items-center">
 
-          <span>© CarbonX, 2026</span>
+          <span>© EcoSankalp, 2026</span>
 
           <span className="hidden md:inline">·</span>
 

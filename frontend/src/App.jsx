@@ -7,6 +7,8 @@ import AdminApproval from "./pages/AdminApproval";
 import Certificate from "./pages/Certificate";
 import Signup from "./pages/Signup";
 import ListingDetails from "./pages/ListingDetails";
+import Sahayak from "./pages/Sahayak";
+import ChatbotWidget from "./components/ChatbotWidget";
 
 import { ToastProvider } from "./context/ToastContext";
 
@@ -16,8 +18,11 @@ export default function App() {
       <BrowserRouter>
         <Routes>
 
-        {/* MAIN CARBONX WEBSITE */}
+        {/* MAIN ECOSANKALP WEBSITE */}
         <Route path="/" element={<Home />} />
+
+        {/* CARBON & WASTE SAHAYAK */}
+        <Route path="/sahayak" element={<Sahayak />} />
 
         {/* LOGIN / SIGNUP */}
         <Route path="/login" element={<Login />} />
@@ -44,6 +49,10 @@ export default function App() {
         />
 
       </Routes>
+
+      {/* GLOBAL FLOATING AI CHATBOT TOGGLE */}
+      <ChatbotWidget />
+
       </BrowserRouter>
     </ToastProvider>
   );

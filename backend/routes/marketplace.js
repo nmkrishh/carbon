@@ -58,33 +58,63 @@ router.post('/:listingId/buy', protect, restrictTo('consumer'), async (req, res)
       return res.status(404).json({ message: 'Active listing not found' });
     }
 
+    const txHash = "0x" + Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+
     // Record transaction
     const transaction = await Transaction.create({
       listing_id: listing.id,
       buyer_id: req.user.id,
       amount_paid: listing.price,
-      // tx_hash would be added if payment was on-chain, but we assume off-chain payment for marketplace, or smart contract handles it. 
-      // For this spec, the user says backend does token transfer + creates transactions row. 
-      // We didn't build a transfer function in JS, but it implies standard ERC1155 transfer which needs admin wallet to do it on behalf, or direct user interaction.
-      // We'll keep it simple: just mark it in DB.
+      tx_hash: txHash
     });
 
     // Update status
     listing.is_active = false;
     await listing.save();
     
-    // It's technically owned by consumer now, but we'll mark as verified (owned by consumer) or something,
-    // The spec says: POST /marketplace/:creditId/buy (consumer buys a credit — calls a transfer function, creates a transaction record, updates credit status)
-    // We'll update credit status to 'verified' for the consumer (effectively taking it off the market).
-    // The spec is slightly ambiguous, but let's just mark it verified.
-    
     const credit = listing.Credit;
-    // We don't change org_id since it's the issuer, but consumer owns it now via transaction.
-    // Let's just update the status so it's not listed anymore.
     credit.status = 'verified'; 
+    credit.tx_hash = txHash;
     await credit.save();
 
     res.json(transaction);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /marketplace/transactions (User or Admin transaction history)
+router.get('/transactions', protect, async (req, res) => {
+  try {
+    let whereClause = {};
+    let listingWhereClause = {};
+
+    if (req.user.role === 'consumer') {
+      whereClause.buyer_id = req.user.id;
+    } else if (req.user.role === 'org') {
+      listingWhereClause.seller_id = req.user.id;
+    }
+
+    const transactions = await Transaction.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: Listing,
+          where: Object.keys(listingWhereClause).length ? listingWhereClause : undefined,
+          include: [
+            { model: Credit },
+            { model: User, attributes: ['name', 'wallet_address'] }
+          ]
+        },
+        {
+          model: User,
+          attributes: ['name', 'wallet_address']
+        }
+      ],
+      order: [['created_at', 'DESC']]
+    });
+
+    res.json(transactions);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -102,7 +132,7 @@ router.post('/retire/:creditId', protect, restrictTo('consumer', 'org'), async (
     const { txHash } = await retireCredit(credit.token_id, credit.amount);
 
     credit.status = 'retired';
-    credit.tx_hash = txHash; // Overwriting mint tx hash with retire tx hash for simplicity, or we could store both.
+    credit.tx_hash = txHash;
     await credit.save();
 
     res.json({

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, KeyRound, User, Wallet } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../config/api";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ export default function Signup() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/signup",
+        `${API_URL}/api/auth/signup`,
         {
           method: "POST",
           headers: {
@@ -49,10 +50,12 @@ export default function Signup() {
         throw new Error(data.message || "Signup failed");
       }
 
-      // Save JWT token if backend returns one
+      // Save JWT token and profile info
       if (data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", formData.role);
+        localStorage.setItem("name", data.name || formData.name || "Eco Member");
+        localStorage.setItem("wallet_address", data.wallet_address || ("0x" + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')));
       }
 
       setMessage("Account created successfully!");
@@ -86,15 +89,14 @@ export default function Signup() {
           {/* LOGO */}
           <Link
             to="/"
-            className="mb-16 flex w-fit items-center gap-2"
+            className="mb-12 flex w-fit items-center"
+            title="EcoSankalp"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#1d2b1f]">
-              <div className="h-3 w-3 rounded-full bg-[#1d2b1f]" />
-            </div>
-
-            <span className="text-[34px] font-medium tracking-[-0.04em] text-[#202020]">
-              CarbonX
-            </span>
+            <img
+              src="/Eco.svg"
+              alt="EcoSankalp Logo"
+              className="h-16 w-16 sm:h-20 sm:w-20 object-contain hover:scale-105 transition-transform duration-200"
+            />
           </Link>
 
           <Link
@@ -112,7 +114,7 @@ export default function Signup() {
             </h1>
 
             <p className="mt-1 text-[16px] text-[#4f4f4f]">
-              Join CarbonX and access the carbon marketplace.
+              Join EcoSankalp and access the carbon marketplace.
             </p>
 
             {/* FORM */}
@@ -123,7 +125,7 @@ export default function Signup() {
                 <input
                   type="text"
                   name="name"
-                  placeholder="Enter your name"
+                  placeholder={formData.role === "org" ? "Organization / Company Name (e.g. EcoTech Energy Ltd)" : "Enter your full name"}
                   value={formData.name}
                   onChange={handleChange}
                   required

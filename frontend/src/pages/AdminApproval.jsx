@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import { useToast } from "../context/ToastContext";
+import { API_URL } from "../config/api";
 
 export default function AdminApproval() {
   const [credits, setCredits] = useState([]);
@@ -14,7 +15,7 @@ export default function AdminApproval() {
   const fetchPendingCredits = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/credits/pending", {
+      const res = await fetch(`${API_URL}/api/credits/pending`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       const data = await res.json();
@@ -27,7 +28,7 @@ export default function AdminApproval() {
   const approveCredit = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/credits/${id}/approve`, {
+      const res = await fetch(`${API_URL}/api/credits/${id}/approve`, {
         method: "PATCH",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -153,7 +154,7 @@ export default function AdminApproval() {
 
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">
-                      {credit.User?.name || "Unknown Org"}
+                      {credit.org_name || credit.User?.name || "Unknown Org"}
                     </h3>
 
                     <p className="mt-2 text-slate-500">

@@ -8,10 +8,14 @@ const router = express.Router();
 // POST /credits (org submits a new credit request)
 router.post('/', protect, restrictTo('org'), async (req, res) => {
   try {
-    const { amount, description, doc_url } = req.body;
+    const { amount, description, doc_url, org_name, country, category, vintage } = req.body;
     
     const credit = await Credit.create({
       org_id: req.user.id,
+      org_name: org_name || req.user.name,
+      country: country || "India",
+      category: category || "Waste Segregation & Sanitization",
+      vintage: vintage ? String(vintage) : "2026",
       amount,
       description,
       doc_url,
