@@ -1,30 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, RotateCcw, Sparkles, X, User } from "lucide-react";
+import { Send, RotateCcw, X, ArrowUpRight, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { API_URL } from "../../config/api";
 
 export const DEFAULT_SUGGESTIONS = [
   "How does Carbon Sahayak calculate credits?",
-  "Why is methane reduction important?",
   "How are credits tokenized on Polygon Amoy?",
-  "How do I buy & retire carbon credits?",
-  "Where can I see my wallet balance?"
-];
-
-const INITIAL_MESSAGES = [
-  {
-    id: "welcome-1",
-    sender: "assistant",
-    content: "Hi there! 👋 I'm your **EcoSankalp Assistant**.",
-    timestamp: "Just now"
-  },
-  {
-    id: "welcome-2",
-    sender: "assistant",
-    content: "Ask me anything about calculating waste credits in **Carbon Sahayak**, how our **Polygon Amoy smart contracts** work, or how to buy and retire credits on the **Marketplace**.",
-    timestamp: "Just now"
-  }
+  "How do I buy & retire carbon credits?"
 ];
 
 function TypingIndicator({ className }) {
@@ -35,16 +18,16 @@ function TypingIndicator({ className }) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-2xl rounded-tl-sm border border-emerald-200 bg-white/95 px-3.5 py-2.5 shadow-sm text-slate-600",
+        "inline-flex items-center gap-1.5 rounded-2xl rounded-tl-xs border border-stone-200 bg-white px-3 py-1.5 shadow-xs text-stone-600",
         className
       )}
     >
-      <span className="text-xs text-emerald-800 font-medium mr-1">Thinking</span>
+      <span className="text-[11px] text-[#067519] font-medium mr-0.5 font-['DM_Sans']">Thinking</span>
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="h-1.5 w-1.5 rounded-full bg-emerald-600"
-          animate={{ opacity: [0.3, 1, 0.3], y: [0, -3, 0] }}
+          className="h-1.5 w-1.5 rounded-full bg-[#067519]"
+          animate={{ opacity: [0.3, 1, 0.3], y: [0, -2.5, 0] }}
           transition={{
             duration: 0.7,
             repeat: Infinity,
@@ -62,28 +45,28 @@ function MessageBubble({ message }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8, scale: 0.98, x: isUser ? 10 : -10 }}
+      initial={{ opacity: 0, y: 6, scale: 0.98, x: isUser ? 8 : -8 }}
       animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={cn("flex w-full", isUser ? "justify-end" : "justify-start")}
     >
-      <div className={cn("flex items-end gap-2 max-w-[88%]", isUser && "flex-row-reverse")}>
+      <div className={cn("flex items-end gap-1.5 max-w-[90%]", isUser && "flex-row-reverse")}>
         {!isUser ? (
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full overflow-hidden bg-white shadow-sm border border-emerald-200 p-0.5">
-            <img src="/Eco.svg" alt="Eco" className="h-full w-full object-contain" />
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full overflow-hidden bg-white shadow-xs border border-emerald-100 p-0.5 mb-0.5">
+            <img src="/chatbot-avatar.png" alt="EcoSankalp AI" className="h-full w-full object-contain" />
           </div>
         ) : (
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-700 shadow-sm border border-slate-300">
+          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#067519]/20 text-[#067519] shadow-xs mb-0.5">
             <User className="size-3.5" />
           </div>
         )}
 
         <div
           className={cn(
-            "rounded-2xl px-4 py-2.5 text-xs sm:text-sm leading-relaxed whitespace-pre-line transition-all",
+            "rounded-2xl px-3.5 py-2 text-[12px] sm:text-[12.5px] leading-relaxed whitespace-pre-line transition-all font-['DM_Sans'] shadow-xs",
             isUser
-              ? "rounded-tr-sm bg-green-700 text-white shadow-sm font-medium"
-              : "rounded-tl-sm border border-slate-200 bg-white text-slate-800 shadow-sm"
+              ? "rounded-tr-xs bg-[#067519] text-white font-medium"
+              : "rounded-tl-xs border border-stone-200/90 bg-white text-stone-800"
           )}
         >
           {message.content}
@@ -94,7 +77,7 @@ function MessageBubble({ message }) {
 }
 
 export function ChatMessages({ onClose, className }) {
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef(null);
@@ -166,7 +149,8 @@ export function ChatMessages({ onClose, className }) {
   };
 
   const resetChat = () => {
-    setMessages(INITIAL_MESSAGES);
+    setMessages([]);
+    setInputValue("");
   };
 
   const handleKeyDown = (e) => {
@@ -179,108 +163,149 @@ export function ChatMessages({ onClose, className }) {
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-[#f8fafc] text-slate-900 shadow-2xl backdrop-blur-md",
+        "relative flex flex-col h-full w-full overflow-hidden bg-gradient-to-b from-[#067519] via-[#0b8020]/95 via-30% to-[#ffffff] text-stone-900 select-none",
         className
       )}
     >
-      {/* HEADER - Clean EcoSankalp Green Palette */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 px-4 py-3.5 bg-white">
-        <div className="flex items-center gap-2.5">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-sm border border-emerald-200 p-0.5">
-            <img src="/Eco.svg" alt="EcoSankalp" className="h-full w-full object-contain" />
-            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500 animate-pulse" />
+      {/* TOP HEADER - Lush Green Gradient Area */}
+      <div className="flex items-center justify-between px-4 pt-3 pb-2.5 shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="flex h-7.5 w-7.5 items-center justify-center rounded-full bg-white shadow-xs border border-white/90 p-0.5 overflow-hidden">
+            <img src="/chatbot-avatar.png" alt="EcoSankalp AI" className="h-full w-full object-contain" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-              EcoSankalp Assistant
-              <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">
-                AI Helper
-              </span>
+            <h3 className="text-[13px] font-semibold font-['Poppins'] text-white leading-tight">
+              EcoSankalp AI
             </h3>
-            <p className="text-[11px] text-slate-500">Ask about calculations, marketplace & wallet</p>
+            <p className="text-[9.5px] text-white/90 font-['DM_Sans'] flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+              Online Assistant
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={resetChat}
-            title="Reset conversation"
-            className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
-          >
-            <RotateCcw className="size-3" />
-            <span className="hidden sm:inline">Reset</span>
-          </button>
+        <div className="flex items-center gap-1">
+          {messages.length > 0 && (
+            <button
+              onClick={resetChat}
+              title="Reset conversation"
+              className="flex h-6.5 w-6.5 items-center justify-center rounded-full bg-white/20 hover:bg-white/35 text-white backdrop-blur-sm transition"
+            >
+              <RotateCcw className="size-3" />
+            </button>
+          )}
 
           {onClose && (
             <button
               onClick={onClose}
               title="Close chat"
-              className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition"
+              className="flex h-6.5 w-6.5 items-center justify-center rounded-full bg-white/20 hover:bg-white/35 text-white backdrop-blur-sm transition"
             >
-              <X className="size-4" />
+              <X className="size-3.5" />
             </button>
           )}
         </div>
       </div>
 
-      {/* MESSAGES LIST */}
-      <div
-        ref={scrollRef}
-        role="log"
-        className="flex-1 space-y-3.5 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent bg-[#f5f7fb]"
-      >
-        {messages.map((message) => (
-          <MessageBubble key={message.id} message={message} />
-        ))}
+      {/* BODY: SIMPLE START STATE VS ACTIVE CONVERSATION */}
+      {messages.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-2 text-center">
+          {/* Centered Logo Badge */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25 }}
+            className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-md border border-emerald-100/80 p-1.5 mb-2.5"
+          >
+            <img src="/chatbot-avatar.png" alt="EcoSankalp AI" className="h-full w-full object-contain" />
+          </motion.div>
 
-        <AnimatePresence>{isTyping && <TypingIndicator />}</AnimatePresence>
-      </div>
+          {/* Clean Greeting Headline */}
+          <motion.h2
+            initial={{ y: 6, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.08, duration: 0.25 }}
+            className="font-['Lora',serif] text-xl font-normal text-stone-800 tracking-tight"
+          >
+            Good day, Eco Member
+          </motion.h2>
 
-      {/* QUICK SUGGESTIONS */}
-      {messages.length <= 3 && (
-        <div className="px-4 py-2 border-t border-slate-100 bg-white">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-            Quick Questions:
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {DEFAULT_SUGGESTIONS.slice(0, 3).map((prompt, idx) => (
+          <motion.p
+            initial={{ y: 6, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.12, duration: 0.25 }}
+            className="mt-0.5 text-[11px] text-stone-100 font-['DM_Sans'] max-w-[230px] leading-snug"
+          >
+            Ask me anything about credit calculations, smart contracts, or the marketplace.
+          </motion.p>
+
+          {/* Quick Suggestion Chips */}
+          <motion.div
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.16, duration: 0.25 }}
+            className="mt-3.5 w-full max-w-[280px] flex flex-col gap-1.5"
+          >
+            {DEFAULT_SUGGESTIONS.map((suggestion, idx) => (
               <button
                 key={idx}
-                onClick={() => sendMessage(prompt)}
-                disabled={isTyping}
-                className="rounded-full border border-emerald-200 bg-emerald-50/70 px-2.5 py-1 text-[11px] font-medium text-emerald-900 hover:bg-emerald-100 hover:border-emerald-300 transition text-left"
+                onClick={() => sendMessage(suggestion)}
+                className="group flex items-center justify-between text-left text-[11.5px] font-['DM_Sans'] text-stone-700 bg-white hover:text-[#067519] border border-stone-200 hover:border-[#067519]/50 rounded-xl px-3 py-2 shadow-xs transition-all duration-150"
               >
-                {prompt}
+                <span className="line-clamp-1 font-medium">{suggestion}</span>
+                <ArrowUpRight className="size-3 text-stone-400 group-hover:text-[#067519] shrink-0 ml-1 transition-colors" />
               </button>
             ))}
-          </div>
+          </motion.div>
+        </div>
+      ) : (
+        /* CONVERSATION MESSAGES LIST */
+        <div
+          ref={scrollRef}
+          role="log"
+          className="flex-1 space-y-2.5 overflow-y-auto px-3.5 py-2.5 scrollbar-thin scrollbar-thumb-stone-200 scrollbar-track-transparent select-text"
+        >
+          {messages.map((message) => (
+            <MessageBubble key={message.id} message={message} />
+          ))}
+
+          <AnimatePresence>
+            {isTyping && (
+              <div className="flex items-end gap-1.5 max-w-[90%]">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full overflow-hidden bg-white shadow-xs border border-emerald-100 p-0.5 mb-0.5">
+                  <img src="/chatbot-avatar.png" alt="EcoSankalp AI" className="h-full w-full object-contain" />
+                </div>
+                <TypingIndicator />
+              </div>
+            )}
+          </AnimatePresence>
         </div>
       )}
 
-      {/* INPUT BAR */}
-      <div className="border-t border-slate-200 bg-white p-3">
-        <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 focus-within:border-green-600 focus-within:bg-white focus-within:ring-2 focus-within:ring-green-100 transition shadow-sm">
+      {/* DOCKED INPUT BAR - CLEAN PILL WITH ONLY TEXT INPUT & SEND BUTTON */}
+      <div className="px-3 py-2 bg-white border-t border-stone-200/80 shrink-0">
+        <div className="flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1 focus-within:border-[#067519] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#067519]/20 transition-all shadow-xs">
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isTyping}
-            placeholder="Type your question here..."
-            className="flex-1 bg-transparent text-xs sm:text-sm text-slate-800 outline-none placeholder:text-slate-400 disabled:cursor-not-allowed"
+            placeholder="How can I help you today?"
+            className="flex-1 bg-transparent text-xs font-['DM_Sans'] text-stone-800 outline-none placeholder:text-stone-400 disabled:cursor-not-allowed py-1"
           />
           <button
             onClick={() => sendMessage()}
             disabled={isTyping || !inputValue.trim()}
             aria-label="Send message"
             className={cn(
-              "flex h-7 w-7 items-center justify-center rounded-full transition-all",
+              "flex h-6.5 w-6.5 items-center justify-center rounded-full transition-all shrink-0",
               inputValue.trim() && !isTyping
-                ? "bg-green-700 text-white shadow hover:bg-green-800 active:scale-95"
-                : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                ? "bg-[#067519] text-white shadow-xs hover:bg-[#056014] active:scale-95 cursor-pointer"
+                : "bg-stone-200 text-stone-400 cursor-not-allowed"
             )}
           >
-            <Send className="size-3.5" />
+            <Send className="size-3" />
           </button>
         </div>
       </div>

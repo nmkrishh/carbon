@@ -230,7 +230,7 @@ export default function MarketplaceSidebar({
       <button
         type="button"
         onClick={onContactClick}
-        className="w-full h-[48px] bg-[#067525] rounded-[4px] text-white font-poppins font-bold text-[14px] uppercase tracking-[0.06em] flex items-center justify-center transition-all hover:bg-[#f0ad00] active:scale-[0.99] cursor-pointer shadow-none"
+        className="w-full h-[48px] bg-[#067525] rounded-[4px] text-white font-poppins font-bold text-[14px] uppercase tracking-[0.06em] flex items-center justify-center transition-all hover:bg-[#000000] active:scale-[0.99] cursor-pointer shadow-none"
       >
         CONTACT US
       </button>

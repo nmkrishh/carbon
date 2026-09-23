@@ -143,15 +143,7 @@ export default function Sahayak() {
       <div className="border-b border-slate-200 bg-white px-6 py-10 lg:px-12">
         <div className="mx-auto max-w-7xl">
           
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-green-300 bg-green-50 px-3.5 py-1 text-xs font-bold text-green-800">
-              <Sparkles size={14} className="text-green-700" />
-              Clean & Green Technology | Carbon MRV Engine
-            </span>
-            <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-500">
-              Deterministic Emission Avoidance
-            </span>
-          </div>
+          
 
           <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
