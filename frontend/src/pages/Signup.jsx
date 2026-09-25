@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Eye, EyeOff, KeyRound, User, Wallet } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../config/api";
+import { PasswordStrength } from "../components/ui/password-strength";
+import { LoadingButton } from "../components/ui/loading-button";
 
 export default function Signup() {
   const navigate = useNavigate();
+  const formRef = useRef(null);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -16,7 +19,6 @@ export default function Signup() {
     wallet_address: "",
   });
 
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -26,56 +28,47 @@ export default function Signup() {
     });
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
+  const handleSignupAction = async () => {
     setMessage("");
 
-    try {
-      const response = await fetch(
-        `${API_URL}/api/auth/signup`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Signup failed");
-      }
-
-      // Save JWT token and profile info
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", formData.role);
-        localStorage.setItem("name", data.name || formData.name || "Eco Member");
-        localStorage.setItem("wallet_address", data.wallet_address || ("0x" + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')));
-      }
-
-      setMessage("Account created successfully!");
-
-      // Redirect based on role
-      setTimeout(() => {
-        if (formData.role === "consumer") {
-          navigate("/marketplace");
-        } else if (formData.role === "org") {
-          navigate("/dashboard");
-        } else if (formData.role === "admin") {
-          navigate("/admin");
-        }
-      }, 1000);
-
-    } catch (error) {
-      setMessage(error.message || "Something went wrong");
-    } finally {
-      setLoading(false);
+    if (!formRef.current.reportValidity()) {
+      throw new Error("Please fill out all required fields correctly.");
     }
+
+    const response = await fetch(`${API_URL}/api/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Signup failed");
+    }
+
+    // Save JWT token and profile info
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", formData.role);
+      localStorage.setItem("name", data.name || formData.name || "Eco Member");
+      localStorage.setItem("wallet_address", data.wallet_address || ("0x" + Array.from({length: 40}, () => Math.floor(Math.random() * 16).toString(16)).join('')));
+    }
+
+    setMessage("Account created successfully!");
+
+    // Redirect based on role
+    setTimeout(() => {
+      if (formData.role === "consumer") {
+        navigate("/marketplace");
+      } else if (formData.role === "org") {
+        navigate("/dashboard");
+      } else if (formData.role === "admin") {
+        navigate("/admin");
+      }
+    }, 1000);
   };
 
   return (
@@ -118,7 +111,7 @@ export default function Signup() {
             </p>
 
             {/* FORM */}
-            <form onSubmit={handleSignup} className="mt-8">
+            <form ref={formRef} className="mt-8">
 
               {/* NAME */}
               <div className="relative">
@@ -158,7 +151,6 @@ export default function Signup() {
 
               {/* PASSWORD */}
               <div className="relative mt-4">
-
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
@@ -180,8 +172,14 @@ export default function Signup() {
                     <Eye size={18} />
                   )}
                 </button>
-
               </div>
+
+              {/* PASSWORD STRENGTH */}
+              {formData.password && (
+                <div className="mt-3">
+                  <PasswordStrength value={formData.password} />
+                </div>
+              )}
 
               {/* ROLE */}
               <div className="mt-4">
@@ -213,7 +211,6 @@ export default function Signup() {
 
               {/* WALLET ADDRESS */}
               <div className="relative mt-4">
-
                 <input
                   type="text"
                   name="wallet_address"
@@ -227,7 +224,6 @@ export default function Signup() {
                   size={17}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-[#333]"
                 />
-
               </div>
 
               {/* MESSAGE */}
@@ -244,17 +240,20 @@ export default function Signup() {
               )}
 
               {/* SIGNUP BUTTON */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="mt-6 h-[52px] w-full rounded-md bg-[#21180f] text-[15px] font-medium text-white transition hover:bg-[#382a1d] disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading ? "Creating account..." : "Create account"}
-              </button>
+              <div className="mt-6">
+                <LoadingButton
+                  className="!h-[52px] !rounded-md !bg-[#21180f] !text-white hover:!bg-[#382a1d] !border-none"
+                  onAction={handleSignupAction}
+                  pendingLabel="Creating account..."
+                  successLabel="Created!"
+                  errorLabel="Try again"
+                  onError={(err) => setMessage(err.message || "Something went wrong")}
+                >
+                  Create account
+                </LoadingButton>
+              </div>
 
             </form>
-
-            
 
           </div>
 

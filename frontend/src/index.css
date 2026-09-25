@@ -142,3 +142,8 @@ body {
 .animate-orbits {
   animation: rotateOrbits 120s linear infinite;
 }
+
+html, body {
+  overflow-x: clip;
+  max-width: 100vw;
+}

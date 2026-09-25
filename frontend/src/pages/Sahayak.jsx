@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { 
   Leaf, 
@@ -8,7 +8,6 @@ import {
   ShieldCheck, 
   Sparkles, 
   Gauge, 
-  TrendingUp, 
   Download, 
   ArrowRight, 
   Layers, 
@@ -136,47 +135,48 @@ export default function Sahayak() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f7fb] text-slate-800">
+    <div className="min-h-screen bg-[#F8F9FA] text-slate-900 font-sans selection:bg-emerald-100">
       <Navbar />
 
-      {/* HEADER BANNER */}
-      <div className="border-b border-slate-200 bg-white px-6 py-10 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          
-          
+      {/* PREMIUM HEADER BANNER */}
+      <div className="relative overflow-hidden bg-[#0a1f16] px-6 py-16 lg:px-12">
+        {/* Background Gradients & Noise */}
+        <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+        <div className="absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-emerald-500/20 blur-[100px]"></div>
+        <div className="absolute -left-20 bottom-0 h-[300px] w-[300px] rounded-full bg-teal-500/10 blur-[80px]"></div>
 
-          <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-green-700">
+        <div className="relative mx-auto max-w-7xl">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-emerald-300 backdrop-blur-md">
+                <Sparkles size={12} />
                 Carbon Accounting & Verification
-              </p>
-              <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-                Carbon & Waste <span className="text-green-700">Sahayak</span> (सहायक)
+              </div>
+              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Carbon <span className="text-emerald-400 font-light italic">Sahayak</span>
               </h1>
-              <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
-                Deterministic calculation platform that converts municipal, campus, and industrial 
-                <strong className="text-slate-800"> waste segregation</strong> and <strong className="text-slate-800">sanitary disposal</strong> into tradeable, verified carbon credits.
+              <p className="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg font-light">
+                A deterministic calculation engine that converts campus and industrial waste streams into verified, tradeable carbon offsets.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <button 
                 onClick={handleExportEvidence}
-                className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-95"
+                className="group flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/20 active:scale-95"
               >
-                <Download size={16} className="text-green-700" />
+                <Download size={16} className="text-emerald-400 group-hover:-translate-y-0.5 transition-transform" />
                 Export Audit Bundle
               </button>
               <button 
                 onClick={handleTransferToDashboard}
-                className="flex items-center gap-2 rounded-xl bg-green-700 px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-green-800 active:scale-95"
+                className="group flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-[#0a1f16] shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 hover:shadow-emerald-500/30 active:scale-95"
               >
                 Mint on Marketplace
-                <ArrowRight size={16} />
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -187,48 +187,51 @@ export default function Sahayak() {
           {/* LEFT: INTERACTIVE WASTE & SANITIZATION INPUTS (7 Cols) */}
           <div className="space-y-6 lg:col-span-7">
             
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-              
-              <div className="flex items-center justify-between border-b border-slate-100 pb-5">
+            <div className="rounded-[24px] border border-slate-200/60 bg-white p-6 shadow-xl shadow-slate-200/40 sm:p-10 relative overflow-hidden">
+              {/* Subtle top highlight */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500"></div>
+
+              <div className="flex items-center justify-between border-b border-slate-100 pb-6">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <Trash2 className="text-green-700" size={22} />
-                    Waste Segregation & Sanitization Stream
+                  <h2 className="text-2xl font-semibold text-slate-900 flex items-center gap-2 tracking-tight">
+                    <Trash2 className="text-emerald-500" size={24} />
+                    Waste Segregation Streams
                   </h2>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Enter measured weights from campus or municipal collection to calculate Scope 3 avoided emissions.
+                  <p className="mt-1.5 text-sm text-slate-500">
+                    Quantify campus or municipal collection weights to calculate Scope 3 avoided emissions.
                   </p>
                 </div>
-                <span className="hidden rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-bold text-green-800 sm:inline-block">
+                <span className="hidden rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-600/10 sm:inline-block">
                   v2.4 MRV Active
                 </span>
               </div>
 
               {/* Facility details */}
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Reporting Facility / Campus
                   </label>
-                  <div className="mt-1.5 flex items-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5">
-                    <Building2 size={16} className="mr-2 text-slate-400" />
+                  <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 transition-colors focus-within:border-emerald-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-emerald-500/10">
+                    <Building2 size={18} className="mr-3 text-slate-400" />
                     <input 
                       type="text" 
                       value={orgName} 
                       onChange={(e) => setOrgName(e.target.value)}
-                      className="w-full bg-transparent text-sm font-medium text-slate-800 outline-none"
+                      className="w-full bg-transparent text-sm font-medium text-slate-900 outline-none placeholder:text-slate-400"
+                      placeholder="e.g. Green Facility"
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                <div className="space-y-2">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Verification Standard
                   </label>
                   <select 
                     value={selectedStandard}
                     onChange={(e) => setSelectedStandard(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-800 outline-none"
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-sm font-medium text-slate-900 outline-none transition-colors focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
                   >
                     <option value="CPCB_IPCC_2026">CPCB & IPCC 2026 National Guidelines</option>
                     <option value="CCTS_INDIA">India Carbon Credit Scheme (CCTS)</option>
@@ -238,184 +241,164 @@ export default function Sahayak() {
               </div>
 
               {/* STREAM INPUTS */}
-              <div className="mt-8 space-y-5">
+              <div className="mt-10 space-y-6">
                 
                 {/* 1. Organic Waste */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-green-400">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-100 text-green-700">
-                        <Leaf size={20} />
+                <div className="group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-100/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                        <Leaf size={22} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">Organic & Food Waste (Composting / Biogas)</h3>
-                        <p className="text-xs text-slate-500">Avoids methane from open landfill dumping (Factor: 0.52 tCO₂e/t)</p>
+                        <h3 className="text-[15px] font-semibold text-slate-900">Organic & Food Waste</h3>
+                        <p className="mt-1 text-xs text-slate-500 leading-relaxed">Avoids methane from open landfill dumping.<br/>Factor: <span className="font-medium text-slate-700">0.52 tCO₂e/t</span></p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-green-700">+{calculations.orgCredits.toFixed(2)} tCO₂e</span>
+                    <div className="text-right">
+                      <span className="inline-block rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">+{calculations.orgCredits.toFixed(2)} tCO₂e</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-5 flex items-center gap-5">
                     <input 
-                      type="range" 
-                      min="0" 
-                      max="100" 
-                      step="0.5" 
-                      value={organicTons} 
-                      onChange={(e) => setOrganicTons(e.target.value)}
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-green-700"
+                      type="range" min="0" max="100" step="0.5" 
+                      value={organicTons} onChange={(e) => setOrganicTons(e.target.value)}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-100 accent-emerald-500 hover:accent-emerald-400"
                     />
-                    <div className="flex w-28 items-center rounded-lg border border-slate-300 bg-white px-2.5 py-1.5">
+                    <div className="flex w-28 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 transition-colors focus-within:border-emerald-500 focus-within:bg-white">
                       <input 
-                        type="number" 
-                        value={organicTons} 
-                        onChange={(e) => setOrganicTons(e.target.value)}
-                        className="w-full bg-transparent text-right text-sm font-bold text-slate-900 outline-none" 
+                        type="number" value={organicTons} onChange={(e) => setOrganicTons(e.target.value)}
+                        className="w-full bg-transparent text-right text-sm font-semibold text-slate-900 outline-none" 
                       />
-                      <span className="ml-1 text-xs text-slate-500 font-medium">t</span>
+                      <span className="ml-1.5 text-xs font-medium text-slate-400">t</span>
                     </div>
                   </div>
                 </div>
 
                 {/* 2. Plastic & Packaging */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-blue-400">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
-                        <Recycle size={20} />
+                <div className="group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-blue-200 hover:shadow-md hover:shadow-blue-100/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                        <Recycle size={22} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">Plastic & Circular Packaging Recycled</h3>
-                        <p className="text-xs text-slate-500">Displaces virgin petrochemical polymers (Factor: 1.40 tCO₂e/t)</p>
+                        <h3 className="text-[15px] font-semibold text-slate-900">Plastic & Circular Packaging</h3>
+                        <p className="mt-1 text-xs text-slate-500 leading-relaxed">Displaces virgin petrochemical polymers.<br/>Factor: <span className="font-medium text-slate-700">1.40 tCO₂e/t</span></p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-blue-700">+{calculations.plasticCredits.toFixed(2)} tCO₂e</span>
+                    <div className="text-right">
+                      <span className="inline-block rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-700">+{calculations.plasticCredits.toFixed(2)} tCO₂e</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-5 flex items-center gap-5">
                     <input 
-                      type="range" 
-                      min="0" 
-                      max="50" 
-                      step="0.2" 
-                      value={plasticTons} 
-                      onChange={(e) => setPlasticTons(e.target.value)}
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-blue-600"
+                      type="range" min="0" max="50" step="0.2" 
+                      value={plasticTons} onChange={(e) => setPlasticTons(e.target.value)}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-100 accent-blue-500 hover:accent-blue-400"
                     />
-                    <div className="flex w-28 items-center rounded-lg border border-slate-300 bg-white px-2.5 py-1.5">
+                    <div className="flex w-28 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 transition-colors focus-within:border-blue-500 focus-within:bg-white">
                       <input 
-                        type="number" 
-                        value={plasticTons} 
-                        onChange={(e) => setPlasticTons(e.target.value)}
-                        className="w-full bg-transparent text-right text-sm font-bold text-slate-900 outline-none" 
+                        type="number" value={plasticTons} onChange={(e) => setPlasticTons(e.target.value)}
+                        className="w-full bg-transparent text-right text-sm font-semibold text-slate-900 outline-none" 
                       />
-                      <span className="ml-1 text-xs text-slate-500 font-medium">t</span>
+                      <span className="ml-1.5 text-xs font-medium text-slate-400">t</span>
                     </div>
                   </div>
                 </div>
 
                 {/* 3. Sanitary & Bio-Medical Waste */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-amber-400">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                        <ShieldCheck size={20} />
+                <div className="group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-amber-200 hover:shadow-md hover:shadow-amber-100/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                        <ShieldCheck size={22} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">Sanitary & Bio-Medical Waste Disinfection</h3>
-                        <p className="text-xs text-slate-500">Autoclave & High-Temp sanitization disposal (Factor: 0.85 tCO₂e/t)</p>
+                        <h3 className="text-[15px] font-semibold text-slate-900">Sanitary & Bio-Medical</h3>
+                        <p className="mt-1 text-xs text-slate-500 leading-relaxed">Autoclave & High-Temp sanitization.<br/>Factor: <span className="font-medium text-slate-700">0.85 tCO₂e/t</span></p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-amber-700">+{calculations.sanitaryCredits.toFixed(2)} tCO₂e</span>
+                    <div className="text-right">
+                      <span className="inline-block rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">+{calculations.sanitaryCredits.toFixed(2)} tCO₂e</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-5 flex items-center gap-5">
                     <input 
-                      type="range" 
-                      min="0" 
-                      max="30" 
-                      step="0.1" 
-                      value={sanitaryTons} 
-                      onChange={(e) => setSanitaryTons(e.target.value)}
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-amber-600"
+                      type="range" min="0" max="30" step="0.1" 
+                      value={sanitaryTons} onChange={(e) => setSanitaryTons(e.target.value)}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-100 accent-amber-500 hover:accent-amber-400"
                     />
-                    <div className="flex w-28 items-center rounded-lg border border-slate-300 bg-white px-2.5 py-1.5">
+                    <div className="flex w-28 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 transition-colors focus-within:border-amber-500 focus-within:bg-white">
                       <input 
-                        type="number" 
-                        value={sanitaryTons} 
-                        onChange={(e) => setSanitaryTons(e.target.value)}
-                        className="w-full bg-transparent text-right text-sm font-bold text-slate-900 outline-none" 
+                        type="number" value={sanitaryTons} onChange={(e) => setSanitaryTons(e.target.value)}
+                        className="w-full bg-transparent text-right text-sm font-semibold text-slate-900 outline-none" 
                       />
-                      <span className="ml-1 text-xs text-slate-500 font-medium">t</span>
+                      <span className="ml-1.5 text-xs font-medium text-slate-400">t</span>
                     </div>
                   </div>
                 </div>
 
                 {/* 4. E-Waste */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-purple-400">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-700">
-                        <Cpu size={20} />
+                <div className="group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-purple-200 hover:shadow-md hover:shadow-purple-100/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                        <Cpu size={22} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">E-Waste Collection & Urban Mining</h3>
-                        <p className="text-xs text-slate-500">High-intensity mineral recovery offsets (Factor: 2.10 tCO₂e/t)</p>
+                        <h3 className="text-[15px] font-semibold text-slate-900">E-Waste Collection</h3>
+                        <p className="mt-1 text-xs text-slate-500 leading-relaxed">High-intensity mineral recovery offsets.<br/>Factor: <span className="font-medium text-slate-700">2.10 tCO₂e/t</span></p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-purple-700">+{calculations.ewasteCredits.toFixed(2)} tCO₂e</span>
+                    <div className="text-right">
+                      <span className="inline-block rounded-full bg-purple-50 px-2.5 py-1 text-xs font-bold text-purple-700">+{calculations.ewasteCredits.toFixed(2)} tCO₂e</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-5 flex items-center gap-5">
                     <input 
-                      type="range" 
-                      min="0" 
-                      max="10" 
-                      step="0.1" 
-                      value={ewasteTons} 
-                      onChange={(e) => setEwasteTons(e.target.value)}
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-purple-600"
+                      type="range" min="0" max="10" step="0.1" 
+                      value={ewasteTons} onChange={(e) => setEwasteTons(e.target.value)}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-100 accent-purple-500 hover:accent-purple-400"
                     />
-                    <div className="flex w-28 items-center rounded-lg border border-slate-300 bg-white px-2.5 py-1.5">
+                    <div className="flex w-28 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 transition-colors focus-within:border-purple-500 focus-within:bg-white">
                       <input 
-                        type="number" 
-                        value={ewasteTons} 
-                        onChange={(e) => setEwasteTons(e.target.value)}
-                        className="w-full bg-transparent text-right text-sm font-bold text-slate-900 outline-none" 
+                        type="number" value={ewasteTons} onChange={(e) => setEwasteTons(e.target.value)}
+                        className="w-full bg-transparent text-right text-sm font-semibold text-slate-900 outline-none" 
                       />
-                      <span className="ml-1 text-xs text-slate-500 font-medium">t</span>
+                      <span className="ml-1.5 text-xs font-medium text-slate-400">t</span>
                     </div>
                   </div>
                 </div>
 
                 {/* 5. Waste to Energy */}
-                <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 transition hover:border-yellow-400">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-100 text-yellow-700">
-                        <Zap size={20} />
+                <div className="group rounded-2xl border border-slate-100 bg-white p-5 shadow-sm transition-all hover:border-orange-200 hover:shadow-md hover:shadow-orange-100/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-orange-600 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <Zap size={22} />
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-slate-900">Waste-to-Energy / Biogas Grid Export</h3>
-                        <p className="text-xs text-slate-500">Grid fossil fuel displacement (Factor: 0.65 tCO₂e/MWh)</p>
+                        <h3 className="text-[15px] font-semibold text-slate-900">Waste-to-Energy Export</h3>
+                        <p className="mt-1 text-xs text-slate-500 leading-relaxed">Grid fossil fuel displacement.<br/>Factor: <span className="font-medium text-slate-700">0.65 tCO₂e/MWh</span></p>
                       </div>
                     </div>
-                    <span className="text-xs font-bold text-yellow-700">+{calculations.energyCredits.toFixed(2)} tCO₂e</span>
+                    <div className="text-right">
+                      <span className="inline-block rounded-full bg-orange-50 px-2.5 py-1 text-xs font-bold text-orange-700">+{calculations.energyCredits.toFixed(2)} tCO₂e</span>
+                    </div>
                   </div>
-                  <div className="mt-3 flex items-center gap-4">
+                  <div className="mt-5 flex items-center gap-5">
                     <input 
-                      type="range" 
-                      min="0" 
-                      max="50" 
-                      step="0.5" 
-                      value={wasteToEnergyMWh} 
-                      onChange={(e) => setWasteToEnergyMWh(e.target.value)}
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-200 accent-yellow-600"
+                      type="range" min="0" max="50" step="0.5" 
+                      value={wasteToEnergyMWh} onChange={(e) => setWasteToEnergyMWh(e.target.value)}
+                      className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-100 accent-orange-500 hover:accent-orange-400"
                     />
-                    <div className="flex w-28 items-center rounded-lg border border-slate-300 bg-white px-2.5 py-1.5">
+                    <div className="flex w-28 shrink-0 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 transition-colors focus-within:border-orange-500 focus-within:bg-white">
                       <input 
-                        type="number" 
-                        value={wasteToEnergyMWh} 
-                        onChange={(e) => setWasteToEnergyMWh(e.target.value)}
-                        className="w-full bg-transparent text-right text-sm font-bold text-slate-900 outline-none" 
+                        type="number" value={wasteToEnergyMWh} onChange={(e) => setWasteToEnergyMWh(e.target.value)}
+                        className="w-full bg-transparent text-right text-sm font-semibold text-slate-900 outline-none" 
                       />
-                      <span className="ml-1 text-xs text-slate-500 font-medium">MWh</span>
+                      <span className="ml-1.5 text-xs font-medium text-slate-400">MWh</span>
                     </div>
                   </div>
                 </div>
@@ -425,133 +408,141 @@ export default function Sahayak() {
             </div>
 
             {/* METHODOLOGY DRAWER */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 text-xs text-slate-500 shadow-sm">
-              <div className="flex items-center gap-2 font-bold text-slate-800">
-                <Info size={16} className="text-green-700" />
-                Mathematical Emission Factor Basis (IPCC Tier 2 & CPCB Framework)
+            <div className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-sm flex gap-4 items-start">
+              <div className="mt-0.5 rounded-full bg-slate-100 p-2 text-slate-500">
+                <Info size={18} />
               </div>
-              <p className="mt-2 leading-relaxed">
-                Emissions Avoided (tCO₂e) = Σ (Waste Mass × DOC × DOC_f × F × 16/12 × GWP_CH4) − Baseline Transport Emissions.
-                Methane (CH₄) from unsegregated solid municipal waste carries a Global Warming Potential (GWP) of 28× over 100 years. Segregating compostable and recyclable streams directly prevents methanogenesis in open landfills.
-              </p>
+              <div>
+                <h4 className="text-sm font-semibold text-slate-900">Mathematical Emission Factor Basis</h4>
+                <p className="mt-2 text-xs leading-relaxed text-slate-500">
+                  Emissions Avoided (tCO₂e) = Σ (Waste Mass × DOC × DOC_f × F × 16/12 × GWP_CH4) − Baseline Transport Emissions.<br/><br/>
+                  Methane (CH₄) from unsegregated solid municipal waste carries a Global Warming Potential (GWP) of 28× over 100 years. Segregating compostable and recyclable streams directly prevents methanogenesis in open landfills.
+                </p>
+              </div>
             </div>
 
           </div>
 
-          {/* RIGHT: THE SAHAYAK INTELLIGENCE COCKPIT (5 Cols) */}
           <div className="space-y-6 lg:col-span-5">
 
             {/* LIVE COCKPIT CARD */}
-            <div className="rounded-2xl border border-green-200 bg-white p-6 shadow-sm">
+            <div className="rounded-[24px] bg-[#0a1f16] p-8 text-white shadow-2xl shadow-emerald-900/20 relative overflow-hidden">
+              {/* Decorative elements */}
+              <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-emerald-500/10 blur-[60px]"></div>
               
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-green-700">
-                    Live Impact Summary
-                  </span>
-                  <h3 className="text-lg font-bold text-slate-900">Sahayak Intelligence Cockpit</h3>
-                </div>
-                <span className="flex items-center gap-1.5 rounded-full border border-green-200 bg-green-50 px-3 py-1 text-xs font-bold text-green-800">
-                  <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse"></span>
-                  Audit-Ready
-                </span>
-              </div>
-
-              {/* BIG STATS */}
-              <div className="mt-6">
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Carbon Credits Generated</p>
-                <div className="mt-2 flex items-baseline gap-2">
-                  <span className="text-5xl font-extrabold tracking-tight text-slate-900 sm:text-6xl">
-                    {calculations.totalTCO2e}
-                  </span>
-                  <span className="text-lg font-bold text-green-700">tCO₂e</span>
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  Equivalent to <strong className="text-slate-800">{calculations.totalKgCO2e} kg CO₂e</strong> greenhouse gas emissions prevented.
-                </p>
-              </div>
-
-              {/* ESTIMATED VALUE & CONFIDENCE */}
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Market Value</p>
-                  <p className="mt-2 text-2xl font-bold text-green-700">₹{calculations.totalValueINR}</p>
-                  <p className="mt-1 text-[10px] text-slate-400 font-medium">at ₹1,250/credit (CCTS)</p>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    <span>Audit Score</span>
-                    <Gauge size={14} className="text-green-700" />
+              <div className="relative">
+                <div className="flex items-center justify-between pb-6">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
+                      Live Impact Summary
+                    </span>
+                    <h3 className="mt-1 text-xl font-medium tracking-tight text-white">Sahayak Cockpit</h3>
                   </div>
-                  <p className="mt-2 text-2xl font-bold text-slate-900">{calculations.confidenceScore}%</p>
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-200">
-                    <div 
-                      className="h-full rounded-full bg-green-600"
-                      style={{ width: `${calculations.confidenceScore}%` }}
-                    />
+                  <span className="flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-300">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Audit-Ready
+                  </span>
+                </div>
+
+                {/* BIG STATS */}
+                <div className="mt-4 pb-8 border-b border-white/10">
+                  <p className="text-xs font-medium uppercase tracking-widest text-slate-400">Total Credits Generated</p>
+                  <div className="mt-3 flex items-baseline gap-2">
+                    <span className="text-6xl font-semibold tracking-tighter text-white">
+                      {calculations.totalTCO2e}
+                    </span>
+                    <span className="text-xl font-medium text-emerald-400">tCO₂e</span>
+                  </div>
+                  <p className="mt-2 text-sm text-slate-300">
+                    Equivalent to <strong className="text-white font-semibold">{calculations.totalKgCO2e} kg CO₂e</strong> emissions prevented.
+                  </p>
+                </div>
+
+                {/* ESTIMATED VALUE & CONFIDENCE */}
+                <div className="mt-8 grid grid-cols-2 gap-4">
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Market Value</p>
+                    <p className="mt-2 text-2xl font-semibold text-emerald-400">₹{calculations.totalValueINR}</p>
+                    <p className="mt-1.5 text-[10px] text-slate-400 font-medium tracking-wide">at ₹1,250/credit (CCTS)</p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+                    <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                      <span>Audit Score</span>
+                      <Gauge size={14} className="text-emerald-400" />
+                    </div>
+                    <p className="mt-2 text-2xl font-semibold text-white">{calculations.confidenceScore}%</p>
+                    <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                      <div 
+                        className="h-full rounded-full bg-emerald-400 transition-all duration-500"
+                        style={{ width: `${calculations.confidenceScore}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* SCOPE 3 CATEGORY BREAKDOWN BAR */}
-              <div className="mt-6">
-                <div className="flex justify-between text-xs text-slate-500">
-                  <span className="font-semibold">Emission Avoidance Breakdown</span>
-                  <span className="font-bold text-slate-800">{calculations.totalWasteTonnes} Tonnes Waste</span>
+                {/* SCOPE 3 CATEGORY BREAKDOWN BAR */}
+                <div className="mt-8">
+                  <div className="flex justify-between text-xs text-slate-400">
+                    <span className="font-medium">Emission Avoidance Breakdown</span>
+                    <span className="font-semibold text-white">{calculations.totalWasteTonnes} t Processed</span>
+                  </div>
+                  
+                  {/* Visual Segments */}
+                  <div className="mt-3 flex h-2.5 overflow-hidden rounded-full bg-white/10">
+                    <span style={{ width: `${calculations.orgPct}%` }} className="bg-emerald-500" title={`Organic: ${calculations.orgPct}%`} />
+                    <span style={{ width: `${calculations.plasticPct}%` }} className="bg-blue-500" title={`Plastic: ${calculations.plasticPct}%`} />
+                    <span style={{ width: `${calculations.sanitaryPct}%` }} className="bg-amber-400" title={`Sanitary: ${calculations.sanitaryPct}%`} />
+                    <span style={{ width: `${calculations.ewastePct}%` }} className="bg-purple-500" title={`E-Waste: ${calculations.ewastePct}%`} />
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-y-3 gap-x-2 text-[11px] text-slate-300 font-medium">
+                    <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm bg-emerald-500" /> Organic ({calculations.orgPct}%)</span>
+                    <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm bg-blue-500" /> Plastic ({calculations.plasticPct}%)</span>
+                    <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm bg-amber-400" /> Sanitary ({calculations.sanitaryPct}%)</span>
+                    <span className="flex items-center gap-2"><span className="h-2.5 w-2.5 rounded-sm bg-purple-500" /> E-Waste ({calculations.ewastePct}%)</span>
+                  </div>
                 </div>
-                
-                {/* Visual Segments */}
-                <div className="mt-2 flex h-3.5 overflow-hidden rounded-full bg-slate-100 p-0.5 border border-slate-200">
-                  <span style={{ width: `${calculations.orgPct}%` }} className="bg-green-600 rounded-l-full" title={`Organic: ${calculations.orgPct}%`} />
-                  <span style={{ width: `${calculations.plasticPct}%` }} className="bg-blue-600" title={`Plastic: ${calculations.plasticPct}%`} />
-                  <span style={{ width: `${calculations.sanitaryPct}%` }} className="bg-amber-500" title={`Sanitary: ${calculations.sanitaryPct}%`} />
-                  <span style={{ width: `${calculations.ewastePct}%` }} className="bg-purple-600 rounded-r-full" title={`E-Waste: ${calculations.ewastePct}%`} />
-                </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] text-slate-600 font-medium">
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-600" /> Organic ({calculations.orgPct}%)</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-blue-600" /> Plastic ({calculations.plasticPct}%)</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber-500" /> Sanitary ({calculations.sanitaryPct}%)</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-purple-600" /> E-Waste ({calculations.ewastePct}%)</span>
+                {/* SUBMIT BUTTON */}
+                <div className="mt-10">
+                  <button
+                    onClick={handleTransferToDashboard}
+                    className="w-full rounded-2xl bg-emerald-500 py-4 text-center text-sm font-bold text-[#0a1f16] shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-400 hover:shadow-emerald-400/30 active:scale-[0.98]"
+                  >
+                    Transfer & List {calculations.totalTCO2e} Credits
+                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* SANITIZATION & PUBLIC HEALTH IMPACT */}
-              <div className="mt-6 rounded-xl border border-green-200 bg-green-50/70 p-4 text-xs">
-                <div className="flex items-center gap-2 font-bold text-green-900">
-                  <CheckCircle2 size={16} className="text-green-700" />
-                  Sanitization & Public Hygiene Index
-                </div>
-                <p className="mt-1 text-slate-600 leading-relaxed">
-                  Proper segregation of <strong className="text-slate-900">{sanitaryTons}t</strong> of bio-medical waste eliminates hazardous leachate and bacterial dispersion into public water reservoirs.
-                </p>
+            {/* SANITIZATION & PUBLIC HEALTH IMPACT */}
+            <div className="rounded-2xl border border-emerald-100 bg-emerald-50/50 p-6 text-sm">
+              <div className="flex items-center gap-2 font-semibold text-emerald-900">
+                <CheckCircle2 size={18} className="text-emerald-600" />
+                Sanitization & Public Hygiene Index
               </div>
-
-              {/* SUBMIT BUTTON */}
-              <div className="mt-6">
-                <button
-                  onClick={handleTransferToDashboard}
-                  className="w-full rounded-xl bg-green-700 py-4 text-center font-bold text-white shadow-md transition duration-200 hover:bg-green-800 active:scale-[0.98]"
-                >
-                  Transfer & List {calculations.totalTCO2e} Credits on EcoSankalp
-                </button>
-              </div>
-
+              <p className="mt-2 text-slate-600 leading-relaxed">
+                Proper segregation of <strong className="text-slate-900">{sanitaryTons}t</strong> of bio-medical waste eliminates hazardous leachate and bacterial dispersion into public water reservoirs.
+              </p>
             </div>
 
             {/* AUDIT CARDS */}
-            <div className="grid gap-3 sm:grid-cols-2 text-xs">
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <FileCheck size={18} className="text-green-700 mb-2" />
-                <h4 className="font-bold text-slate-900">Immutable Ledger</h4>
-                <p className="text-slate-500 mt-1">Ready for Polygon smart contract minting with cryptographic proof of disposal.</p>
+            <div className="grid gap-4 sm:grid-cols-2 text-sm">
+              <div className="rounded-2xl border border-slate-200/60 bg-white p-5 shadow-sm">
+                <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center mb-3 text-slate-700">
+                  <FileCheck size={20} />
+                </div>
+                <h4 className="font-semibold text-slate-900">Immutable Ledger</h4>
+                <p className="text-slate-500 mt-1.5 text-xs leading-relaxed">Ready for Polygon smart contract minting with cryptographic proof.</p>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-                <Layers size={18} className="text-blue-600 mb-2" />
-                <h4 className="font-bold text-slate-900">Factor Versioning</h4>
-                <p className="text-slate-500 mt-1">CPCB / MoEFCC 2026 certified factor coefficients with audit reproducibility.</p>
+              <div className="rounded-2xl border border-slate-200/60 bg-white p-5 shadow-sm">
+                <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center mb-3 text-slate-700">
+                  <Layers size={20} />
+                </div>
+                <h4 className="font-semibold text-slate-900">Factor Versioning</h4>
+                <p className="text-slate-500 mt-1.5 text-xs leading-relaxed">CPCB / MoEFCC 2026 certified coefficients with audit reproducibility.</p>
               </div>
             </div>
 

@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Eye, EyeOff, KeyRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useToast } from "../context/ToastContext";
 import { API_URL } from "../config/api";
+import { LoadingButton } from "../components/ui/loading-button";
 
 export default function Login() {
+  const formRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -16,38 +18,69 @@ export default function Login() {
   const navigate = useNavigate();
   const { addToast } = useToast();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-  
+  const handleRoleSelect = (selectedRole) => {
+    setRole(selectedRole);
+    // Helpful prefill for testing / presentations
+    if (selectedRole === "consumer") {
+      setEmail("consumer@gmail.com");
+      setPassword("password123");
+    } else if (selectedRole === "org") {
+      setEmail("org@gmail.com");
+      setPassword("password123");
+    } else if (selectedRole === "admin") {
+      setEmail("admin@gmail.com");
+      setPassword("password123");
+    }
+  };
+
+  const handleLoginAction = async () => {
+    if (!formRef.current.reportValidity()) {
+      throw new Error("Please fill out all required fields.");
+    }
+
     if (!email || !password) {
-      addToast("Please enter your email and password.", "error");
-      return;
+      addToast("Please enter both email and password.", "error");
+      throw new Error("Missing email or password");
     }
-  
-    // Demo login — any email/password is accepted
-    localStorage.setItem("token", "demo-token");
-    localStorage.setItem("role", role);
-    localStorage.setItem("name", email.split("@")[0] || "Eco User");
-  
-    // Generate a demo wallet address
-    localStorage.setItem(
-      "wallet_address",
-      "0x" +
-        Array.from({ length: 40 }, () =>
-          Math.floor(Math.random() * 16).toString(16)
-        ).join("")
-    );
-  
-    // Redirect according to selected RBAC role
-    if (role === "consumer") {
-      navigate("/marketplace");
-    } else if (role === "organization") {
-      navigate("/dashboard");
-    } else if (role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/");
+
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        password: password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      addToast(data.message || "Invalid email or password", "error");
+      throw new Error(data.message || "Invalid email or password");
     }
+
+    // Save verified JWT token and user info from server
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("name", data.name || "Eco User");
+    localStorage.setItem("wallet_address", data.wallet_address || "");
+
+    addToast(`Signed in successfully as ${data.name}!`, "success");
+
+    // Redirect strictly based on the authenticated user's actual database role
+    setTimeout(() => {
+      if (data.role === "consumer") {
+        navigate("/marketplace");
+      } else if (data.role === "org") {
+        navigate("/dashboard");
+      } else if (data.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    }, 500);
   };
 
   return (
@@ -71,7 +104,6 @@ export default function Login() {
             />
           </Link>
 
-
           {/* LOGIN CONTENT */}
           <div>
 
@@ -94,7 +126,7 @@ export default function Login() {
 
               <button
                 type="button"
-                onClick={() => setRole("consumer")}
+                onClick={() => handleRoleSelect("consumer")}
                 className={`rounded-md border px-3 py-3 text-sm font-medium transition ${
                   role === "consumer"
                     ? "border-[#21180f] bg-[#21180f] text-white"
@@ -104,12 +136,11 @@ export default function Login() {
                 Consumer
               </button>
 
-
               <button
                 type="button"
-                onClick={() => setRole("organization")}
+                onClick={() => handleRoleSelect("org")}
                 className={`rounded-md border px-3 py-3 text-sm font-medium transition ${
-                  role === "organization"
+                  role === "org" || role === "organization"
                     ? "border-[#21180f] bg-[#21180f] text-white"
                     : "border-[#d7d7d7] bg-white text-[#303030] hover:bg-[#f7f7f7]"
                 }`}
@@ -117,10 +148,9 @@ export default function Login() {
                 Organization
               </button>
 
-
               <button
                 type="button"
-                onClick={() => setRole("admin")}
+                onClick={() => handleRoleSelect("admin")}
                 className={`rounded-md border px-3 py-3 text-sm font-medium transition ${
                   role === "admin"
                     ? "border-[#21180f] bg-[#21180f] text-white"
@@ -134,91 +164,73 @@ export default function Login() {
 
             </div>
 
+            {/* FORM */}
+            <form ref={formRef} className="mt-7">
 
-            {/* GOOGLE BUTTON */}
-            <button
-              className="mt-7 flex h-[48px] w-full items-center justify-center gap-3 rounded-md border border-[#d7d7d7] bg-white text-[15px] font-medium text-[#303030] shadow-sm transition hover:bg-[#f7f7f7]"
-            >
-              <span className="flex h-5 w-5 items-center justify-center rounded-full text-[16px] font-bold text-red-500">
-                G
-              </span>
+              {/* EMAIL */}
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  className="h-[50px] w-full rounded-md border border-[#d5d5d5] bg-white px-4 pr-12 text-[15px] text-[#222] outline-none transition placeholder:text-[#8a8a8a] focus:border-[#555]"
+                />
+                <KeyRound
+                  size={17}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#333]"
+                />
+              </div>
 
-              Sign in with Google
-            </button>
+              {/* PASSWORD */}
+              <div className="relative mt-4">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                  className="h-[50px] w-full rounded-md border border-[#d5d5d5] bg-white px-4 pr-12 text-[15px] text-[#222] outline-none transition placeholder:text-[#8a8a8a] focus:border-[#555]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#333]"
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
+                </button>
+              </div>
 
+              {/* FORGOT PASSWORD */}
+              <div className="mt-4 flex items-center justify-between">
+                <button type="button" className="text-[14px] font-medium text-[#303030] hover:underline">
+                  Forgot password?
+                </button>
+                <span className="text-xs text-slate-400">
+                  Default pwd: <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-600">password123</code>
+                </span>
+              </div>
 
-            {/* DIVIDER */}
-            <div className="my-8 flex items-center gap-4">
+              {/* CONTINUE BUTTON */}
+              <div className="mt-6">
+                <LoadingButton
+                  className="!h-[52px] !rounded-md !bg-[#21180f] !text-white hover:!bg-[#382a1d] !border-none"
+                  onAction={handleLoginAction}
+                  pendingLabel="Verifying Credentials..."
+                  successLabel="Signed In!"
+                  errorLabel="Failed"
+                  onError={(err) => console.error(err)}
+                >
+                  Continue
+                </LoadingButton>
+              </div>
 
-              <div className="h-px flex-1 bg-[#dedede]" />
-
-              <span className="text-[14px] text-[#555]">
-                or
-              </span>
-
-              <div className="h-px flex-1 bg-[#dedede]" />
-
-            </div>
-
-
-            {/* EMAIL */}
-            <div className="relative">
-
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email address"
-              className="h-[50px] w-full rounded-md border border-[#d5d5d5] bg-white px-4 pr-12 text-[15px] text-[#222] outline-none transition placeholder:text-[#8a8a8a] focus:border-[#555]"
-            />
-
-              <KeyRound
-                size={17}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#333]"
-              />
-
-            </div>
-
-
-            {/* PASSWORD */}
-            <div className="relative mt-4">
-
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              className="h-[50px] w-full rounded-md border border-[#d5d5d5] bg-white px-4 pr-12 text-[15px] text-[#222] outline-none transition placeholder:text-[#8a8a8a] focus:border-[#555]"
-            />
-
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#333]"
-              >
-                {showPassword ? (
-                  <EyeOff size={18} />
-                ) : (
-                  <Eye size={18} />
-                )}
-              </button>
-
-            </div>
-
-
-            {/* FORGOT PASSWORD */}
-            <button className="mt-4 text-[14px] font-medium text-[#303030] hover:underline">
-              Forgot password?
-            </button>
-
-
-            {/* CONTINUE BUTTON */}
-            <button
-              onClick={handleLogin}
-              className="mt-6 h-[52px] w-full rounded-md bg-[#21180f] text-[15px] font-medium text-white transition hover:bg-[#382a1d]"
-            >
-              Continue
-            </button>
+            </form>
 
 
             {/* SIGNUP */}
